@@ -15,7 +15,7 @@ class Route
 		$action_name = 'index';
 		
 		$routes = explode('/', $_SERVER['REQUEST_URI']);
-
+		
 		// получаем имя контроллера
 		if ( !empty($routes[2]) )
 		{	
@@ -42,7 +42,7 @@ class Route
 		// подцепляем файл с классом модели (файла модели может и не быть)
 
 		$model_file = strtolower($model_name).'.php';
-		$model_path = "application/models".$model_file;
+		$model_path = "application/models/".$model_file;
 		if(file_exists($model_path))
 		{
 			include "application/models".$model_file;
@@ -50,10 +50,10 @@ class Route
 
 		// подцепляем файл с классом контроллера
 		$controller_file = strtolower($controller_name).'.php';
-		$controller_path = "application/controllers".$controller_file;
+		$controller_path = "application/controllers/".$controller_file;
 		if(file_exists($controller_path))
 		{
-			include "application/controllers".$controller_file;
+			include "application/controllers/".$controller_file;
 		}
 		else
 		{
@@ -89,6 +89,7 @@ class Route
         header('HTTP/1.1 404 Not Found');
 		header("Status: 404 Not Found");
 		header('Location:'.$host.'404');
+
     }
     
 }
