@@ -1,52 +1,65 @@
+<?php	require_once("../includes/defaults.php");?>
+<?php	require_once("../includes/db_connection.php");?>
+<?php	require_once("../includes/functions.php");?>
+<?php session_start();?>
 <?php 
-	$dbhost = "localhost";
-	$dbuser = "krizis2_cms";
-	$dbpass = "vesna15";
-	$dbname = "krizis";
-	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
-	if (mysqli_connect_errno()){
-		die("Database connection failed: " .
-		mysqli_connect_error() .
-		" (" . mysqli_connect_errno() . ")"
-		);
+	if (isset($_GET["category"])) {
+		$_SESSION["category"] = $_GET["category"];
 	}
-
-	mysqli_query($connection, "SET NAMES utf8");
+	else if (isset($_SESSION["category"])) {
+		
+	}
+	else {
+		$_SESSION["category"] = CATEGORY_ALL;
+	}
 ?>
-
-<?php 
-	$query = "SELECT * from categories";
-	$result = mysqli_query($connection, $query);
-	if (!$result) {
-		die("Database query failed!");
+<?php
+	if (isset($_GET["lang"])) {
+		$_SESSION["lang"] = $_GET["lang"];
 	}
-	$categories = array();
-	while($row = mysqli_fetch_assoc($result)) {
-		$categories[$row["id"]] = $row["title_rus"];
-	}	
-	mysqli_free_result($result);
+	else if(isset($_SESSION["lang"])) {
+
+	} else {
+		$_SESSION["lang"] = "rus";
+	}
 ?>
-
-<?php 
-	$query = "SELECT * from shops";
-	$result = mysqli_query($connection, $query);
-	if (!$result) {
-		die("Database query failed!");
+<?php
+	if (isset($_GET["Selver"])) {
+		$_SESSION["Selver"] = $_GET["Selver"];
 	}
-	$shops = array();
-	while($row = mysqli_fetch_assoc($result)) {
-		$shops[$row["id"]] = $row["name"];
-	}	
-	mysqli_free_result($result);
+	else if (isset($_SESSION["Selver"])) {
+		
+	}
+	else {
+		$_SESSION["Selver"] = 1;
+	}
 ?>
+<?php
+	if (isset($_GET["Prisma"])) {
+		$_SESSION["Prisma"] = $_GET["Prisma"];
+	}
+	else if (isset($_SESSION["Prisma"])) {
+		
+	}
+	else {
+		$_SESSION["Prisma"] = 1;
+	}
+?>
+<?php
+	if (isset($_GET["Maxima"])) {
+		$_SESSION["Maxima"] = $_GET["Maxima"];
+	}
+	else if (isset($_SESSION["Maxima"])) {
+		
+	}
+	else {
+		$_SESSION["Maxima"] = 1;
+	}
+?>
+<?php $categories = find_visible_categories(); ?>
 
 <?php 
-	$query = "SELECT * from products";
-	$result = mysqli_query($connection, $query);
-	if (!$result) {
-		die("Database query failed!");
-	}
+	$result = find_all_products();
 ?>
 
 <!DOCTYPE html>
@@ -96,17 +109,21 @@
   			</div>
 			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="#est">Est</a></li>
-					<li class="active"><a href="#rus">Rus</a></li>
+					<li <?php if($_SESSION['lang'] == 'est'){ echo "class=\"active\"";}?>><a href="index.php?lang=est">Est</a></li>
+					<li <?php if($_SESSION['lang'] == 'rus'){ echo "class=\"active\"";}?>><a href="index.php?lang=rus">Rus</a></li>
 				</ul>
 
 			<form class="navbar-form navbar-right">
-			<div class="btn-group" data-toggle="buttons">
-	         <?php foreach ($shops as $shop) {?>
-            <label class="btn btn-primary active">
-            	<input type="checkbox" autocomplete="off"><?php echo htmlentities($shop);?>
+			<div class="btn-group" data-toggle="buttons">         
+            <label class="btn btn-primary <?php if ($_SESSION["Selver"]) { echo "active"; }?>">
+            	<input type="checkbox" autocomplete="off">Selver
             </label>	
-            <?php }?>				
+            <label class="btn btn-primary <?php if ($_SESSION["Prisma"]) { echo "active"; }?>">
+            	<input type="checkbox" autocomplete="off">Prisma
+            </label>
+            <label class="btn btn-primary <?php if ($_SESSION["Maxima"]) { echo "active"; }?>">
+            	<input type="checkbox" autocomplete="off">Maxima
+            </label>                        
 			</div>			
 			<div class="input-group">
 		  		<input type="search" placeholder="Поиск" class="form-control" />
@@ -130,16 +147,16 @@
           </div>
           <div class="row">
           	
-          	<?php
-          	
-          	while($row = mysqli_fetch_assoc($result)) {		?>
+
+		         	
+          	<?php while($row = mysqli_fetch_assoc($result)) {		?>
 			
             <div class="col-xs-6 col-lg-4">
-              <h3><?php echo htmlentities($row["title_rus"]);?></h3>
+              <h3><?php echo htmlentities($row[$_SESSION["lang"]]);?></h3>
               <img src=<?php echo htmlentities($row["image"]);?> width="80%"/>
 				<div class="wrapper">
 					<div class="old-price">
-					  <h3><?php echo htmlentities($row["old_price"]);?></h4>
+					  <h3><?php echo htmlentities($row["old_price"]);?></h3>
 					</div>
 					<div class="new-price">
 						<p>Цена</p>
@@ -149,7 +166,14 @@
 						<p>До</p>
 						<h3><?php echo htmlentities($row["expires"]);?></h3>
 					  </div>	
-					  <p class="shop">(<?php echo htmlentities($shops[$row["shop_id"]]);?>)</p>		
+		          	<?php
+						$query = "SELECT * from shops";
+						$query .= " WHERE id=" . $row["shop_id"];
+						$query .= " LIMIT 1";
+						$shops = mysqli_query($connection, $query);
+						confirm_query($shops);		
+						$shop = mysqli_fetch_assoc($shops); ?>			  
+					  	<p class="shop">(<?php echo htmlentities($shop["name"]);?>)</p>		
 				</div>              
              </div><!--/.col-xs-6.col-lg-4-->
              <?php 
@@ -160,8 +184,14 @@
 
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
           <div class="list-group">
-	         <?php foreach ($categories as $category) {?>
-            <a href="#" class="list-group-item"><?php echo htmlentities($category);?></a>
+           	<a href="index.php?category=<?php echo CATEGORY_ALL; ?>" class="list-group-item <?php if(CATEGORY_ALL == $_SESSION["category"]){ echo "active ";}?>">
+           		<?php switch($_SESSION['lang']){
+           			case "rus": echo "Все категории"; break; 
+           			case "est": echo "Kõik kategooriad"; break; 
+				}?></a>
+           	
+	         <?php foreach ($categories as $category_id => $category_name) {?>
+            <a href="index.php?category=<?php echo urlencode($category_id);?>" class="list-group-item <?php if($category_id == $_SESSION["category"]){ echo "active ";}?>"><?php echo htmlentities($category_name);?></a>
             <?php }?>
           </div>
         </div><!--/.sidebar-offcanvas-->
