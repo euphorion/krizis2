@@ -71,7 +71,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon"  href="http://example.com/favicon.png">
+    <link rel="icon"  href="images/favicon.png">
 
     <title>Сад Скидок</title>
 
@@ -83,10 +83,6 @@
 
     <!-- Custom styles for this template -->
     <link href="css/layout3-bootstrap.css" rel="stylesheet">
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>

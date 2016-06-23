@@ -6,7 +6,7 @@
 <?php	include("../includes/admin_nav_sidebar.php");?>
 
 <?php 		
-	$query = "SELECT * from categories ";
+	$query = "SELECT * from admins ";
 	$query .= "ORDER BY id ASC";
 	$result = mysqli_query($connection, $query);
 	confirm_query($result);
@@ -14,22 +14,20 @@
 
 <?php echo message(); ?>
 <?php echo form_errors(); ?>
-<h1 class="page-header">Управление категориями</h1>
+<h1 class="page-header">Управление админами</h1>
 
 
           <h2 class="sub-header">Все категории</h2>
 		  <div class="btn-group">
-		    <a href="add_category.php" class="btn btn-primary" role="button">Добавить</a>
+		    <a href="add_admin.php" class="btn btn-primary" role="button">Добавить</a>
 		  </div>          
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Название</th>
-                  <th>Название (эст.)</th>
-                  <th>Показывается на странице</th>
-                  <th>Позиция</th>
+                  <th>Имя</th>
+                  <th>Пароль</th>
                   <th></th>
                 </tr>
               </thead>
@@ -39,14 +37,12 @@
           	while($row = mysqli_fetch_assoc($result)) {		?>
 	            <tr>
 	            	<td><?php echo $row["id"];?></td>
-	            	<td><?php echo htmlentities($row["rus"]);?></td>
-	            	<td><?php echo htmlentities($row["est"]);?></td>
-	            	<td><?php echo $row["visible"];?></td>
-	            	<td><?php echo $row["position"];?></td>
+	            	<td><?php echo htmlentities($row["username"]);?></td>
+	            	<td><?php echo htmlentities($row["hashed_password"]);?></td>
 	            	<td>
 					  <div class="btn-group">
-					    <a href="edit_category.php?category=<?php echo urlencode($row["id"]);?>" class="btn btn-primary" role="button">Изменить</a>
-					    <a href="delete_category.php?category=<?php echo urlencode($row["id"]);?>" class="btn btn-primary" role="button">Удалить</a>
+					    <a href="edit_admin.php?admin=<?php echo urlencode($row["id"]);?>" class="btn btn-primary" role="button">Изменить</a>
+					    <a href="delete_admin.php?admin=<?php echo urlencode($row["id"]);?>" class="btn btn-primary" role="button">Удалить</a>
 					  </div>	            		
 	            	</td>
 
@@ -57,6 +53,11 @@
 ?>             
               </tbody>
             </table>
+            
+<hr />
+<?php
+
+?>            
             
           </div>
 

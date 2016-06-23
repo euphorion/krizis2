@@ -65,7 +65,7 @@
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="css/viewport-workaround.css" rel="stylesheet">
+    <script src="bootstrap/js/viewport-bug-workaround.js"></script>
 
     <!-- Custom styles for this template -->
     <link href="css/layout3-bootstrap.css" rel="stylesheet">

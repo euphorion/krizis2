@@ -1,6 +1,7 @@
 <?php	require_once("../includes/session.php");?>
 <?php	require_once("../includes/db_connection.php");?>
 <?php	require_once("../includes/functions.php");?>
+<?php confirm_logged_in();?> ?>
 <?php 	require_once("../includes/validation_functions.php"); ?>
 <?php $selected_category = find_selected_category(); ?>
 <?php 
@@ -65,11 +66,11 @@
 	  <input type="radio" name="visible" value="0" <?php if (!$selected_category["visible"]) echo "checked"; ?>>Не показывается на странице
 	</label>	
 	</div>
-      <label for="position">Добавить после:</label>
+      <label for="position">Порядковый номер:</label>
       <select class="form-control" name="position">
 		<?php $result = find_all_categories(); ?>
-      	<?php $subject_count = mysqli_num_rows($result); ?>
-      	<?php for ($count = 1; $count < ($subject_count+1); $count++) {
+      	<?php $category_count = mysqli_num_rows($result); ?>
+      	<?php for ($count = 1; $count < ($category_count+1); $count++) {
       		echo "<option value=\"$count\"";
       		if ($count == $selected_category["visible"]) echo " selected";
       		echo ">{$count}</option>";
